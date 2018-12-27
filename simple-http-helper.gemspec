@@ -7,6 +7,6 @@ Gem::Specification.new do |s|
   s.authors     = ["Yukai Jin"]
   s.email       = 'fish1928@outlook.com'
 	s.homepage	  = 'https://github.com/fish1928/SimpleHttpHelper'
-  s.files       = ["lib/utils/simple_http_helper.rb"]
+  s.files       = ["lib/helpers/simple_http_helper.rb"]
   s.license       = 'MIT'
 end
