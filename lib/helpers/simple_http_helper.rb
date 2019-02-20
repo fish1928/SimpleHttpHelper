@@ -1,16 +1,22 @@
 require 'net/http'
 require 'net/https'
 require 'json'
+require 'ostruct'
 
 module HelperModule
 
-  # TODO: add SimpleHttpsHelper to support https requests
   class SimpleRequestHelper
     attr_reader :host, :port, :path
     attr_accessor :_debug
 
     def initialize(host, port, path)
       @host, @port, @path = host, port, path
+    end
+
+    def set_auth(username, password)
+      @auth = OpenStruct.new
+      @auth.username = username
+      @auth.password = password
     end
 
     def _request_prefix
@@ -42,7 +48,9 @@ module HelperModule
       end
 
       response = _create_request_sender(@host, @port).start do |http|
-        http.request(content.get_request)
+        request = content.get_request
+        request.basic_auth(@auth.username, @auth.password) if @auth
+        http.request(request)
       end
 
       return SimpleHttpResult.new(response)
@@ -222,7 +230,7 @@ module HelperModule
     end
 
     def is_success?
-      @response.code.to_i == 200
+      @response.code.to_i == 200 || @response.code.to_i == 201
     end
 
     def error_message
